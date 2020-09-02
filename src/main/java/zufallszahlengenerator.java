@@ -8,6 +8,7 @@ public class zufallszahlengenerator {
         Random zufallszahl = null;
         for (int i = 0; i < Zufallszahlen.length; ) {
             zufallszahl = new Random();
+            System.out.println(i);
         }
 
     }

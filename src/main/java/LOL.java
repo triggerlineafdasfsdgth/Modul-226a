@@ -46,7 +46,7 @@ public class LOL {
         System.out.println("Geben sie eine Zahl ein für die Operanten");
         Operator.nextInt();
 
-        switch (zahl3) {
+        switch ((int) zahl3) {
             case 1 -> {
                 System.out.println("Ergebnis =" + Addition(zahl1, zahl2));
                 break;
