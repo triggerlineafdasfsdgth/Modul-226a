@@ -1,21 +1,21 @@
 import java.util.Random;
 import java.util.Scanner;
 
+//ES FUNKTIONIERT ENDLICH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class Mastermind {
 
-    private static final int CODE_LENGTH = 4;
+    private final int CODE_LENGTH = 4;
 
-    private static final char[] COLORS = {'r', 'g', 'b', 'y', 's', 'w'};
+    private final char[] COLORS = {'r', 'g', 'b', 'y', 's', 'w'};
 
-    private static final Random RANDOM = new Random();
+    private final Random RANDOM = new Random();
 
-    private static final Scanner CONSOLE = new Scanner(System.in);
+    private final Scanner CONSOLE = new Scanner(System.in);
 
-    private static final char[] secretCode = new char[CODE_LENGTH];
+    private final char[] secretCode = new char[CODE_LENGTH];
 
 
     public static void main(String[] args) {
-
         Mastermind mastermind = new Mastermind();
         mastermind.play();
     }
@@ -25,17 +25,17 @@ public class Mastermind {
         //Generiere Zufallsfarben
         generateRandomcolors();
         //Char Array mit dem namen entry (leer)
-        char[] entry;
+        char[] entry = new char[CODE_LENGTH];
         //Anzahl der Versuche
         int numberofattempts = 0;
         do {
             //erhöhe numberofattempts um 1
             numberofattempts++;
             //Eingabe
-            requestInput();
+
             // Eingabe wird Bearbeitet    entry Array bekommt die Daten von der methode readentry()
             entry = readEntry();
-            //Prüfen, ob secretCode == Char[] entry, wenn ja, wird das Ergebnis ausgegeben, sonst Schleife weiter laufen lassen
+            //Prüfen, ob secretCode == Char[] entry, wenn nein, wird das Ergebnis ausgegeben, sonst Schleife weiter laufen lassen
         } while (codeDoesNotMatch(entry));
         //Ausgabe und bestimmung, ob Gewonnen oder Verloren.
         printResult(numberofattempts);
@@ -47,104 +47,92 @@ public class Mastermind {
         //Wenn Zahl der Versuche über 12 ist, dann hat man Verloren.
         if (numberofattempts > 12) {
             System.out.println("Sie haben Verloren aufgrund zuvieler Versuche");
-            System.out.println("Anzahl Ihrer Versuche:" + numberofattempts);
+            System.out.println("Anzahl Ihrer Versuche:"+""+ numberofattempts);
             System.out.println("VERLOREN");
         }
-        //Alles unter 13 Versuche fürht zum Sieg.
+        //Alles unter 13 Versuche führt zum Sieg.
         else {
             System.out.println("Sie Haben Gewonnen");
-            System.out.println("Anzahl Ihrer Versuche:" + numberofattempts);
+            System.out.println("Anzahl Ihrer Versuche:"+""+ numberofattempts);
+            System.out.println("Geheimcode:"+""+secretCode[0]+secretCode[1]+secretCode[2]+secretCode[3]);
         }
     }
 
     private boolean codeDoesNotMatch(char[] entry) {
-        //Wenn länge von entry über 4, gibt true aus
-        if (entry.length > CODE_LENGTH)
-            return true;
-        // Wenn secretCode nicht mit entry übereinstimmt, gib true aus.
-        for (int i = 0; i < CODE_LENGTH ; i++) {
-            //Wenn secretCode Array Segment Wert ungleich Wert vom gleichen Char[] entry Segment, dann true ausgeben.
-            if (secretCode[i] != entry[i]) ;
+
+        //vereinfachtes Hinweissystem----------------------------------------------------------------------------
+
+        if (entry.length > CODE_LENGTH) {
             return true;
         }
-        //Präzieseren Abgleich um Hinweise zu geben, das hier ist noch das Modell für einfache Hinweise, will es noch überarbeiten wenn Zeit.
-        //deklaration von Hinweiscounter.
-        int Hinweiscounter = 0;
-        //Wenn abgleichSegment0 = true, dann Hinweiscounter um 1 erhöhen, ansosnten ignorieren.
-        if (abgleichSegment0(entry))
-            ++Hinweiscounter;
 
-        if (abgleichSegment1(entry))
-            ++Hinweiscounter;
-
-        if (abgleichSegment2(entry))
-            ++Hinweiscounter;
-
-        if (abgleichSegment3(entry))
-            ++Hinweiscounter;
-        //Ausgabe der Hinweise.
-        System.out.println("Hinweis:"+Hinweiscounter+"Farben sind richtig");
+        int Zähler_Schwarz = 0;
+        for (int i = 0; i < CODE_LENGTH; i++)
+            if (secretCode[i] == entry[i]) {
+                Zähler_Schwarz++;
+            }
+        if (Zähler_Schwarz == CODE_LENGTH) {
+            return false;
+        }
+        System.out.println("Hinweiss (Schwarz = Farben und Platz die richtig sind):"+""+ Zähler_Schwarz +""+"sind richtig");
+        //ist dafür Zuständig, Hinweisse für die Farben anzugeben, die richtig sind, aber an flascher stelle vorhanden sind.
+        int Zähler_Weiss = 0;
+        for (int i = 0; i < CODE_LENGTH; i++) {
+            if (secretCode[0] == entry[i]) {
+                Zähler_Weiss++;
+            }
+        }
+        for (int i = 0; i < CODE_LENGTH; i++) {
+            if (secretCode[1] == entry[i]) {
+                Zähler_Weiss++;
+            }
+        }
+        for (int i = 0; i < CODE_LENGTH; i++) {
+            if (secretCode[2] == entry[i]) {
+                Zähler_Weiss++;
+            }
+        }
+        for (int i = 0; i < CODE_LENGTH; i++) {
+            if (secretCode[3] == entry[i]) {
+                Zähler_Weiss++;
+            }
+        }
+        int Hinweiss_weiss = Zähler_Weiss - Zähler_Schwarz;
+        if (Hinweiss_weiss > 5) {
+            System.out.println("Weisser Hinweiscounter ist fehlerhaft");
+        } else {
+            //hab ich nur gemacht, weil ich keine Zeit mehr hatte, das System zu überarbeiten.
+            System.out.println("Hinweiss (Weiss = farben die richtig sind oder doppelt vorkommen, aber am falschen Platz oder zu viele):"+""+ Hinweiss_weiss +""+"sind richtig");
+        }
 
         //wenn Tests bestannden, gib False aus um die do While Schleife zu brechen;
-        return false;
+        return true;
     }
-
-    private boolean abgleichSegment3(char[] entry) {
-        if (secretCode[3] == entry[3])
-            return true;
-
-        return false;
-    }
-
-    private boolean abgleichSegment2(char[] entry) {
-        if (secretCode[2] == entry[2])
-            return true;
-
-        return false;
-    }
-
-
-    private boolean abgleichSegment1(char[] entry) {
-        if (secretCode[1] == entry[1])
-            return true;
-
-        return false;
-    }
-
-
-    private boolean abgleichSegment0(char[] entry) {
-        if (secretCode[0] == entry[0])
-            return true;
-
-        return false;
-    }
-
-
-    //Punkt 1 habe ich, Punkts 2 auch, Punkt 3 nicht, punkt 4 nicht
-    //"länge,unerlaubte zahlen, farbenabgleich(zahlenabgleich, hinweise durch abgleich, hinweise anzeigen");
 
     //readentry ist die Methode um am ende die Werte in das char Array Entry zu speichern und beim codedoesnotmatch zu überprüfen
+    //funktioniert
     private char[] readEntry() {
-
-
-        return
+        char[] entry = new char[CODE_LENGTH];
+        for (int i = 0; i < CODE_LENGTH; i++)
+            entry[i] = requestInput();
+        return entry;
     }
-    //funtioneirt aufgrund von irgendetwas nicht = Process finished with exit code 1
-    private char requestInput() {
 
-        //Arraycounter um jede einzelne Zahl (Buchstabe) in ein eigenes Segment vom Array zu speichern (char)
-        int Arraycounter = 0;
-        //Wenn i ist gleich kleiner als 4, führe Schleife aus und erhöhe um 1 bis 4.
-        for (int i = 0; i < CODE_LENGTH; i++) {
-            //Hatte keine lust, Zahlen in Buchstaben zu übersetzen. Also String zu Char.
-            System.out.println("Geben sie Ihren Code ein (0 = red(r), 1 = green(g), 2 = blue(b), 3 = yellow(y), 4 = schwarz(s), 5 = weiss(w))");
-            //readEntry mit dem Char Array Segment, bestimmt durch Arraycounter, gleich Farbe die durch die Zhaleneingabe bestimmt wird
-            readEntry()[Arraycounter] = COLORS[CONSOLE.nextInt()];
-            //erhöhung von int Arraycounter um 1
-            Arraycounter++;
+    //funktioniert
+    private char requestInput() {
+        int eingabe;
+        //Hatte keine lust, Zahlen in Buchstaben zu übersetzen. Also String zu Char.
+        System.out.println("Geben sie Ihren Code ein (0 = red(r), 1 = green(g), 2 = blue(b), 3 = yellow(y), 4 = schwarz(s), 5 = weiss(w))");
+        // Variable eingabe ist die eingabe für die Zahlen mit der beschränkung der länge vom Array COLOR.
+        eingabe = CONSOLE.nextInt();
+        //optional------------------------------------
+        if (eingabe > 5) {
+            System.out.println("Zahl:" + "" + eingabe + "" + "ist zu hoch, geht nur von 0 bis 5, versuchen sie es noch einmal");
+            return requestInput();
         }
-        //gibt Farbe aus die ins Char Array gespeichert wird, durch die Zahlen der Eingabe
-        return COLORS[CONSOLE.nextInt()];
+        //optional------------------------------------
+        //Gebe Farbe aus, die aus der Int Variable engabe kommt.
+        return COLORS[eingabe];
 
 
     }
@@ -162,15 +150,11 @@ public class Mastermind {
 
     //Funktioniert
     private char randomcolor() {
-        //deklaration von randomcolor
-        int randomcolor = 0;
-        //Wenn i ist gleich kleiner als 4, führe Schleife aus und erhöhe um 1 bis 4.
-        for (int i = 0; i < CODE_LENGTH; i++)
-            //randomcolor = Zufallszahlengenerator der ein zufällige Zahl im bereich zwischen 0 bis 5 ausgibt.
-            randomcolor = RANDOM.nextInt(COLORS.length);
         //Gib Buchstabe des Arraysegments durch die Zufalszahl.
-        return COLORS[randomcolor];
+        return COLORS[RANDOM.nextInt(COLORS.length)];
     }
 
 }
 //Wer die NamensDeklaration nicht auf Lingualer Ebene versteht, der soll Deepl zum übersetzen nutzen.
+//Englische Namensdeklaration sind für mich eine Blockade im Hirn.
+//Ich bin ein Pirat.
